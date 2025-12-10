@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India's Greatest Women Emperors - Matching Game</title>
+    <meta name="description" content="Test your knowledge of India's greatest women emperors by matching them to their places of ruling">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="screen active">
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <h1>India's Greatest Women Emperors</h1>
+                <p class="subtitle">Match the legendary rulers to their kingdoms</p>
+            </div>
+            <div class="welcome-content">
+                <div class="input-group">
+                    <label for="playerName">Enter Your Name</label>
+                    <input type="text" id="playerName" placeholder="Your name here..." autocomplete="off">
+                </div>
+                <button id="startGameBtn" class="btn btn-primary">Start Game</button>
+                <button id="viewHistoryBtn" class="btn btn-secondary">View History</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <!-- Header -->
+            <header class="game-header">
+                <div class="header-left">
+                    <h2>Women Emperors of India</h2>
+                    <p class="player-name">Player: <span id="currentPlayer"></span></p>
+                </div>
+                <div class="header-center">
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">Score</span>
+                            <span class="score-value" id="currentScore">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Matches</span>
+                            <span class="score-value" id="matchCount">0/10</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Time</span>
+                            <span class="score-value" id="timer">00:00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="pauseBtn" class="btn btn-control">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                        Pause
+                    </button>
+                    <button id="exitBtn" class="btn btn-control">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Exit
+                    </button>
+                </div>
+            </header>
+
+            <!-- Game Board -->
+            <div class="game-board">
+                <div class="game-pane left-pane">
+                    <h3>Women Emperors</h3>
+                    <div id="emperorsList" class="items-list"></div>
+                </div>
+
+                <div class="connection-area">
+                    <svg id="connectionSvg" class="connection-svg"></svg>
+                    <div class="match-indicator">
+                        <p>Select an emperor, then select their place of ruling</p>
+                    </div>
+                </div>
+
+                <div class="game-pane right-pane">
+                    <h3>Places of Ruling</h3>
+                    <div id="placesList" class="items-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="pauseScreen" class="modal">
+        <div class="modal-content">
+            <h2>Game Paused</h2>
+            <p>Take a break! Your progress is saved.</p>
+            <div class="modal-actions">
+                <button id="resumeBtn" class="btn btn-primary">Resume Game</button>
+                <button id="exitFromPauseBtn" class="btn btn-secondary">Exit to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Complete Screen -->
+    <div id="completeScreen" class="modal">
+        <div class="modal-content">
+            <div class="complete-header">
+                <h2>🎉 Congratulations!</h2>
+                <p>You've completed the game!</p>
+            </div>
+            <div class="complete-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Final Score</span>
+                    <span class="stat-value" id="finalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time Taken</span>
+                    <span class="stat-value" id="finalTime">00:00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Accuracy</span>
+                    <span class="stat-value" id="accuracy">100%</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="restartBtn" class="btn btn-primary">Play Again</button>
+                <button id="viewHistoryFromCompleteBtn" class="btn btn-secondary">View History</button>
+                <button id="exitFromCompleteBtn" class="btn btn-secondary">Exit to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Screen -->
+    <div id="historyScreen" class="screen">
+        <div class="history-container">
+            <header class="history-header">
+                <h2>Score History</h2>
+                <button id="backToMenuBtn" class="btn btn-secondary">Back to Menu</button>
+            </header>
+            <div class="history-content">
+                <div class="history-stats">
+                    <div class="stat-card">
+                        <h3>Total Games</h3>
+                        <p id="totalGames">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Best Score</h3>
+                        <p id="bestScore">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Score</h3>
+                        <p id="avgScore">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Best Time</h3>
+                        <p id="bestTime">--:--</p>
+                    </div>
+                </div>
+                <div class="history-list">
+                    <h3>Recent Games</h3>
+                    <div id="historyTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
