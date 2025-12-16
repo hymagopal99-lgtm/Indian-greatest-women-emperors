@@ -43,15 +43,15 @@ function initializeEventListeners() {
     document.getElementById("viewHistoryBtn").addEventListener("click", () => {
         showHistoryScreen();
     });
-    
+
     // Game Controls
     document.getElementById("pauseBtn").addEventListener("click", pauseGame);
     document.getElementById("exitBtn").addEventListener("click", exitGame);
-    
+
     // Pause Screen
     document.getElementById("resumeBtn").addEventListener("click", resumeGame);
     document.getElementById("exitFromPauseBtn").addEventListener("click", exitToMenu);
-    
+
     // Complete Screen
     document.getElementById("restartBtn").addEventListener("click", restartGame);
     document.getElementById("viewHistoryFromCompleteBtn").addEventListener("click", () => {
@@ -59,12 +59,12 @@ function initializeEventListeners() {
         showHistoryScreen();
     });
     document.getElementById("exitFromCompleteBtn").addEventListener("click", exitToMenu);
-    
+
     // History Screen
     document.getElementById("backToMenuBtn").addEventListener("click", () => {
         showScreen("welcomeScreen");
     });
-    
+
     // Player Name Input - Enter key
     document.getElementById("playerName").addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
@@ -92,12 +92,12 @@ function hideModal(modalId) {
 // Game Functions
 function startNewGame() {
     const playerName = document.getElementById("playerName").value.trim();
-    
+
     if (!playerName) {
         alert("Please enter your name to start the game!");
         return;
     }
-    
+
     currentPlayer = playerName;
     resetGameState();
     initializeGame();
@@ -123,11 +123,11 @@ function resetGameState() {
 function initializeGame() {
     document.getElementById("currentPlayer").textContent = currentPlayer;
     updateScoreDisplay();
-    
+
     // Shuffle and render lists
     const shuffledEmperors = shuffleArray([...gameData]);
     const shuffledPlaces = shuffleArray([...gameData]);
-    
+
     renderList("emperorsList", shuffledEmperors, "emperor", selectEmperor);
     renderList("placesList", shuffledPlaces, "place", selectPlace);
 }
@@ -135,7 +135,7 @@ function initializeGame() {
 function renderList(containerId, data, type, clickHandler) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
-    
+
     data.forEach(item => {
         const div = document.createElement("div");
         div.className = "item";
@@ -148,15 +148,20 @@ function renderList(containerId, data, type, clickHandler) {
 
 function selectEmperor(id, element) {
     if (gameState.isPaused || gameState.matchedPairs.includes(id)) return;
-    
+
+    // Haptic feedback for mobile devices
+    if (navigator.vibrate) {
+        navigator.vibrate(10);
+    }
+
     // Deselect previous emperor
     document.querySelectorAll("#emperorsList .item").forEach(item => {
         item.classList.remove("selected");
     });
-    
+
     gameState.selectedEmperor = id;
     element.classList.add("selected");
-    
+
     // Check if we can make a match
     if (gameState.selectedPlace !== null) {
         checkMatch();
@@ -165,15 +170,20 @@ function selectEmperor(id, element) {
 
 function selectPlace(id, element) {
     if (gameState.isPaused || gameState.matchedPairs.includes(id)) return;
-    
+
+    // Haptic feedback for mobile devices
+    if (navigator.vibrate) {
+        navigator.vibrate(10);
+    }
+
     // Deselect previous place
     document.querySelectorAll("#placesList .item").forEach(item => {
         item.classList.remove("selected");
     });
-    
+
     gameState.selectedPlace = id;
     element.classList.add("selected");
-    
+
     // Check if we can make a match
     if (gameState.selectedEmperor !== null) {
         checkMatch();
@@ -182,7 +192,7 @@ function selectPlace(id, element) {
 
 function checkMatch() {
     gameState.attempts++;
-    
+
     if (gameState.selectedEmperor === gameState.selectedPlace) {
         // Correct match!
         handleCorrectMatch();
@@ -197,19 +207,24 @@ function handleCorrectMatch() {
     gameState.matchedPairs.push(matchedId);
     gameState.matches++;
     gameState.score += 100;
-    
+
+    // Haptic feedback for correct match
+    if (navigator.vibrate) {
+        navigator.vibrate([50, 30, 50]); // Success pattern
+    }
+
     // Mark items as matched
     document.querySelectorAll(`[data-id="${matchedId}"]`).forEach(item => {
         item.classList.remove("selected");
         item.classList.add("matched");
     });
-    
+
     // Reset selections
     gameState.selectedEmperor = null;
     gameState.selectedPlace = null;
-    
+
     updateScoreDisplay();
-    
+
     // Check if game is complete
     if (gameState.matches === gameData.length) {
         setTimeout(() => {
@@ -220,7 +235,12 @@ function handleCorrectMatch() {
 
 function handleWrongMatch() {
     gameState.score = Math.max(0, gameState.score - 10);
-    
+
+    // Haptic feedback for wrong match
+    if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]); // Error pattern
+    }
+
     // Show wrong animation
     document.querySelectorAll(".item.selected").forEach(item => {
         item.classList.add("wrong");
@@ -229,7 +249,7 @@ function handleWrongMatch() {
             item.classList.remove("selected");
         }, 500);
     });
-    
+
     // Reset selections
     setTimeout(() => {
         gameState.selectedEmperor = null;
@@ -248,7 +268,7 @@ function startTimer() {
     if (gameState.timerInterval) {
         clearInterval(gameState.timerInterval);
     }
-    
+
     gameState.timerInterval = setInterval(() => {
         if (!gameState.isPaused) {
             gameState.elapsedTime = Date.now() - gameState.startTime;
@@ -261,7 +281,7 @@ function updateTimerDisplay() {
     const seconds = Math.floor(gameState.elapsedTime / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    
+
     const timeString = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     document.getElementById("timer").textContent = timeString;
 }
@@ -314,18 +334,18 @@ function completeGame() {
 
 function showCompleteScreen() {
     const accuracy = Math.round((gameState.matches / gameState.attempts) * 100);
-    
+
     document.getElementById("finalScore").textContent = gameState.score;
     document.getElementById("finalTime").textContent = document.getElementById("timer").textContent;
     document.getElementById("accuracy").textContent = `${accuracy}%`;
-    
+
     showModal("completeScreen");
 }
 
 // History Management
 function saveGameHistory(completed) {
     const history = getGameHistory();
-    
+
     const gameRecord = {
         player: currentPlayer,
         score: gameState.score,
@@ -335,11 +355,11 @@ function saveGameHistory(completed) {
         completed: completed,
         timestamp: new Date().toISOString()
     };
-    
+
     if (!history[currentPlayer]) {
         history[currentPlayer] = [];
     }
-    
+
     history[currentPlayer].push(gameRecord);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
@@ -357,39 +377,39 @@ function showHistoryScreen() {
 function renderHistory() {
     const history = getGameHistory();
     const allGames = [];
-    
+
     // Flatten all games from all players
     Object.keys(history).forEach(player => {
         history[player].forEach(game => {
             allGames.push({ ...game, player });
         });
     });
-    
+
     // Sort by timestamp (most recent first)
     allGames.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
+
     // Calculate stats
     const completedGames = allGames.filter(g => g.completed);
     const totalGames = completedGames.length;
     const bestScore = totalGames > 0 ? Math.max(...completedGames.map(g => g.score)) : 0;
     const avgScore = totalGames > 0 ? Math.round(completedGames.reduce((sum, g) => sum + g.score, 0) / totalGames) : 0;
     const bestTime = totalGames > 0 ? Math.min(...completedGames.map(g => g.time)) : 0;
-    
+
     // Update stats
     document.getElementById("totalGames").textContent = totalGames;
     document.getElementById("bestScore").textContent = bestScore;
     document.getElementById("avgScore").textContent = avgScore;
     document.getElementById("bestTime").textContent = formatTime(bestTime);
-    
+
     // Render history table
     const tableContainer = document.getElementById("historyTable");
     tableContainer.innerHTML = "";
-    
+
     if (allGames.length === 0) {
         tableContainer.innerHTML = '<div class="history-empty">No games played yet. Start playing to see your history!</div>';
         return;
     }
-    
+
     // Add header
     const header = document.createElement("div");
     header.className = "history-row header";
@@ -401,15 +421,15 @@ function renderHistory() {
         <div>Date</div>
     `;
     tableContainer.appendChild(header);
-    
+
     // Add rows (limit to 20 most recent)
     allGames.slice(0, 20).forEach(game => {
         const row = document.createElement("div");
         row.className = "history-row";
-        
+
         const date = new Date(game.timestamp);
         const dateString = date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+
         row.innerHTML = `
             <div>${game.player}</div>
             <div>${game.score}</div>
