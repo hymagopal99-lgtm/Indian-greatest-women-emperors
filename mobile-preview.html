@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Layout Preview - Side by Side</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional preview styles */
+        .preview-info {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 10000;
+            text-align: center;
+        }
+
+        .preview-info strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preview-info">
+        <strong>✅ Mobile Side-by-Side Layout</strong>
+        <div>Women Emperors (Left) | Places (Right)</div>
+    </div>
+
+    <div id="gameScreen" class="screen active">
+        <div class="game-container">
+            <!-- Header -->
+            <header class="game-header">
+                <div class="header-left">
+                    <h2>Women Emperors of India</h2>
+                    <p class="player-name">Player: <span id="currentPlayer">Demo User</span></p>
+                </div>
+                <div class="header-center">
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">Score</span>
+                            <span class="score-value" id="currentScore">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Matches</span>
+                            <span class="score-value" id="matchCount">0/10</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Time</span>
+                            <span class="score-value" id="timer">00:00</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Game Board - Side by Side -->
+            <div class="game-board">
+                <div class="game-pane left-pane">
+                    <h3>Women Emperors</h3>
+                    <div id="emperorsList" class="items-list">
+                        <div class="item">Razia Sultana</div>
+                        <div class="item">Rani Durgavati</div>
+                        <div class="item">Rani Abbakka Chowta</div>
+                        <div class="item">Ahilyabai Holkar</div>
+                        <div class="item">Rani Chennamma</div>
+                        <div class="item">Begum Hazrat Mahal</div>
+                        <div class="item">Rani Lakshmibai</div>
+                        <div class="item">Chand Bibi</div>
+                        <div class="item">Rudrama Devi</div>
+                        <div class="item">Mangammal</div>
+                    </div>
+                </div>
+
+                <div class="game-pane right-pane">
+                    <h3>Places of Ruling</h3>
+                    <div id="placesList" class="items-list">
+                        <div class="item">Delhi Sultanate</div>
+                        <div class="item">Gondwana</div>
+                        <div class="item">Ullal</div>
+                        <div class="item">Malwa</div>
+                        <div class="item">Kittur</div>
+                        <div class="item">Awadh</div>
+                        <div class="item">Jhansi</div>
+                        <div class="item">Ahmednagar</div>
+                        <div class="item">Kakatiya Dynasty - Warangal</div>
+                        <div class="item">Madurai Nayak Dynasty</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
